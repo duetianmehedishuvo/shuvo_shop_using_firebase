@@ -1,13 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:shuvo_shop_test/pages/add_product_screen.dart';
-import 'package:shuvo_shop_test/pages/auth_screen.dart';
-import 'package:shuvo_shop_test/pages/home_screen.dart';
-import 'package:shuvo_shop_test/pages/launcher_screen.dart';
-import 'package:shuvo_shop_test/utils/helper.dart';
-import 'package:shuvo_shop_test/utils/routing.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:shuvo_shop_test/provider/auth_provider.dart';
+import 'package:shuvo_shop_test/widgets/import_all_files.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyCWj6Wz2D1Ad0JZS4GtrSRbDVSs2b88gaU",
+      appId: "1:454936401333:android:783292c4c3e1c0e90e35fc",
+      messagingSenderId: "454936401333",
+      projectId: "shuvo-shop-test",
+    ),
+  );
+
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,9 +30,10 @@ class MyApp extends StatelessWidget {
       title: 'Shuvo Shop',
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.blue, bottomAppBarColor: kBlackColorLight),
       routes: allRouters,
-      home: const LauncherScreen(),
+      initialRoute: LauncherScreen.route,
+      // home: const LauncherScreen(),
     );
   }
 }

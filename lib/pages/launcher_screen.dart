@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shuvo_shop_test/pages/auth_screen.dart';
-import 'package:shuvo_shop_test/pages/home_screen.dart';
-import 'package:shuvo_shop_test/utils/helper.dart';
 import 'package:shuvo_shop_test/utils/image_utils.dart';
 
 class LauncherScreen extends StatefulWidget {
@@ -22,7 +20,7 @@ class _LauncherScreenState extends State<LauncherScreen> {
     super.initState();
 
     Timer(Duration(seconds: 5), () {
-      Navigator.of(context).pushNamed(LoginScreen.route);
+      Navigator.of(context).pushNamed(AuthScreen.route);
     });
     // Navigator.of(context).push(MaterialPageRoute(builder: (_)=>HomeScreen()));
   }
