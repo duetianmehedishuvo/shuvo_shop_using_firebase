@@ -12,4 +12,6 @@ class StringsUtils{
   static const String enterYourPhone='Enter your phone no';
   static const String enterYourEmailAddress='Enter your Email Address';
   static const String enterYourPassword='Enter your Password';
+  static const String enterProductName='Enter Product Name';
+  static const String enterProductPrice='Enter Product Price';
 }
