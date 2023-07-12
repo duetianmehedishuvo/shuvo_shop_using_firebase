@@ -11,6 +11,7 @@ void main() async{
       appId: "1:454936401333:android:783292c4c3e1c0e90e35fc",
       messagingSenderId: "454936401333",
       projectId: "shuvo-shop-test",
+      storageBucket: "shuvo-shop-test.appspot.com",
     ),
   );
 

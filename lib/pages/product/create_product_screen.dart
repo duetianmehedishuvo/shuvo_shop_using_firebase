@@ -1,3 +1,6 @@
+import 'package:shuvo_shop_test/models/product_model.dart';
+import 'package:shuvo_shop_test/widgets/custom_message.dart';
+
 import '../../widgets/import_all_files.dart';
 
 class CreateProductScreen extends StatelessWidget {
@@ -53,11 +56,27 @@ class CreateProductScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   CustomTextField(controller: priceController, hintText: StringsUtils.enterProductPrice, inputType: TextInputType.number),
                   SizedBox(height: 10),
+                  authProvider.isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: () {
+                            ProductModel productModel = ProductModel(
+                                id: DateTime.now().microsecondsSinceEpoch,
+                                name: nameController.text,
+                                category: authProvider.selectedCategory,
+                                price: int.parse(priceController.text),
+                                imageUrl: authProvider.imageUrl);
 
-
-                  ElevatedButton(onPressed: (){}, child: Text('Add'))
-
-
+                            authProvider.uploadProduct(productModel, (int value) {
+                              if (value == 1) {
+                                showSnackBarMessage('Successfully uploaded',isError: false);
+                                Navigator.of(context).pop();
+                              } else {
+                                showSnackBarMessage('Failed to upload product');
+                              }
+                            });
+                          },
+                          child: Text('Add'))
                 ],
               ),
             ));

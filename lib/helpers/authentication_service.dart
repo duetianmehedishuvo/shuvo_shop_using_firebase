@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shuvo_shop_test/models/product_model.dart';
 import 'package:shuvo_shop_test/widgets/custom_message.dart';
 import 'package:shuvo_shop_test/widgets/import_all_files.dart';
 
@@ -54,22 +56,37 @@ class AuthenticationService {
     });
   }
 
-
-
-  uploadImage(File file)async{
+  Future<String> uploadImage(File file) async {
     final firebaseStorage = FirebaseStorage.instance;
 
-    var snapshot = firebaseStorage.ref()
-        .child('images/imageName')
-        .putFile(file).snapshot;
+    var snapshot = firebaseStorage.ref().child('images/').child('').putFile(file).snapshot;
     var downloadUrl = await snapshot.ref.getDownloadURL();
-    // setState(() {
-    //   imageUrl = downloadUrl;
-    // });
-
-    print(downloadUrl);
+    return downloadUrl;
   }
 
+  uploadProduct(ProductModel productModel, Function callBack) async {
+    firebaseFirestore.collection(AppConstraints.product).doc(productModel.id.toString()).set(productModel.toJson()).then((value) {
+      callBack(1);
+    });
+  }
+
+  static final DatabaseReference messagesRef = FirebaseDatabase.instance.ref();
+
+  static Future<List<ProductModel>> getAllProduct() async {
+    List<ProductModel> data = [];
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var snapshot = await firebaseFirestore.collection(AppConstraints.product).get();
+
+    if (snapshot != null) {
+      data = snapshot.docs.map((e) {
+        print(e.data());
+        return ProductModel.fromJson(e.data());
+      }).toList();
+      return data;
+    }
+
+    return data;
+  }
 
 // login(String email, String password) async {
 //   // UserCredential userData=await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);

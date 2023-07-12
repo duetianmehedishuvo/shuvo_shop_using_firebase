@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuvo_shop_test/helpers/authentication_service.dart';
+import 'package:shuvo_shop_test/models/product_model.dart';
 import 'package:shuvo_shop_test/utils/app_constraints.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -48,16 +49,20 @@ class AuthProvider with ChangeNotifier {
   }
 
   File? productImage;
+  String imageUrl = '';
 
   void pickImage() async {
+    imageUrl = '';
     final ImagePicker picker = ImagePicker();
 
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       productImage = File(image.path);
 
-      authenticationService.uploadImage(productImage!);
-
+      authenticationService.uploadImage(productImage!).then((value) {
+        imageUrl = value;
+        notifyListeners();
+      });
     }
     notifyListeners();
   }
@@ -68,5 +73,19 @@ class AuthProvider with ChangeNotifier {
   changeCategory(String value) {
     selectedCategory = value;
     notifyListeners();
+  }
+
+  uploadProduct(ProductModel productModel, Function callback) {
+    isLoading = true;
+    notifyListeners();
+    authenticationService.uploadProduct(productModel, (int value) {
+      isLoading = false;
+      notifyListeners();
+      if (value == 1) {
+        callback(1);
+      } else {
+        callback(0);
+      }
+    });
   }
 }

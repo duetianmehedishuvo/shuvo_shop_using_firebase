@@ -2,6 +2,7 @@ class AppConstraints {
 
   //TODO: this is for firebase parent references
   static const String user = 'user';
+  static const String product = 'product';
 
 
   //TODO: this is for Shared Preferences references
