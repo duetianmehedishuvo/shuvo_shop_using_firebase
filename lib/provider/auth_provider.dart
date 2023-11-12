@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuvo_shop_test/helpers/authentication_service.dart';
 import 'package:shuvo_shop_test/models/product_model.dart';
+import 'package:shuvo_shop_test/models/student_model.dart';
 import 'package:shuvo_shop_test/utils/app_constraints.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -75,10 +76,44 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> seriesLists = ['1', '2', '3', '4'];
+  String selectSeries = '1';
+
+  changeSeries(String value) {
+    selectSeries = value;
+    notifyListeners();
+  }
+
   uploadProduct(ProductModel productModel, Function callback) {
     isLoading = true;
     notifyListeners();
     authenticationService.uploadProduct(productModel, (int value) {
+      isLoading = false;
+      notifyListeners();
+      if (value == 1) {
+        callback(1);
+      } else {
+        callback(0);
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+  /// TODO: for student
+  ///
+  ///
+  addStudentRecord(StudentModel studentModel, Function callback) {
+    isLoading = true;
+    notifyListeners();
+    authenticationService.addStudentRecord(studentModel,int.parse(selectSeries), (int value) {
       isLoading = false;
       notifyListeners();
       if (value == 1) {

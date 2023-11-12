@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuvo_shop_test/models/product_model.dart';
+import 'package:shuvo_shop_test/models/student_model.dart';
 import 'package:shuvo_shop_test/widgets/custom_message.dart';
 import 'package:shuvo_shop_test/widgets/import_all_files.dart';
 
@@ -31,12 +32,8 @@ class AuthenticationService {
 
   login(String email, String password, Function callback) async {
     _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
-      var result = await firebaseFirestore
-          .collection(AppConstraints.user)
-          .doc(AppConstraints.user)
-          .collection(value.user!.uid)
-          .doc(AppConstraints.user)
-          .get();
+      var result =
+          await firebaseFirestore.collection(AppConstraints.user).doc(AppConstraints.user).collection(value.user!.uid).doc(AppConstraints.user).get();
       UserModel userModel = UserModel.fromJson(result.data()!);
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -94,4 +91,93 @@ class AuthenticationService {
 //
 //   return _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 // }
+
+//TODO:    this is for student
+
+  addStudentRecord(StudentModel studentModel, int series, Function callBack) async {
+    firebaseFirestore
+        .collection(AppConstraints.series)
+        .doc('data')
+        .collection('$series Series')
+        .doc(studentModel.id.toString())
+        .set(studentModel.toJson())
+        .then((value) {
+
+      firebaseFirestore.collection(AppConstraints.seriesName).doc(series.toString()).set({'series': '$series Series'}).then((value){
+        callBack(1);
+      });
+
+
+    });
+  }
+
+  static getAllCategorySeries() async {
+    // List<ProductModel> data = [];
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var snapshot = await firebaseFirestore.collection(AppConstraints.seriesName).get();
+    print('${snapshot.metadata} ${snapshot.size}');
+    snapshot.docs.toList().forEach((element) {
+      print(element.id);
+    });
+
+    // firebaseFirestore.collection(AppConstraints.series).get().then((value){
+    //   print('shuvo ${value.docs.first.id}');
+    // });
+    // print('shuvo ${snapshot}');
+    // snapshot.get().then((value){
+    //   print(value.docs as Map<String, dynamic>);
+    // });
+    //
+    //     // .doc('data').id;
+    // print(snapshot);
+    // snapshot.then((value){
+    //
+    //   print(value.data());
+    // });
+    // if (snapshot != null) {
+    //   data = snapshot.docs.map((e) {
+    //     print(e.data());
+    //     return ProductModel.fromJson(e.data());
+    //   }).toList();
+    //   return data;
+    // }
+    //
+    // return data;
+  }
+
+  static getAllSeries(int series) async {
+    // List<ProductModel> data = [];
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var snapshot = await firebaseFirestore.collection(AppConstraints.series)
+        .doc('data')
+        .collection('$series Series').get();
+    // print('${snapshot.metadata} ${snapshot.size}');
+    snapshot.docs.toList().forEach((element) {
+      print(element.data());
+    });
+
+    // firebaseFirestore.collection(AppConstraints.series).get().then((value){
+    //   print('shuvo ${value.docs.first.id}');
+    // });
+    // print('shuvo ${snapshot}');
+    // snapshot.get().then((value){
+    //   print(value.docs as Map<String, dynamic>);
+    // });
+    //
+    //     // .doc('data').id;
+    // print(snapshot);
+    // snapshot.then((value){
+    //
+    //   print(value.data());
+    // });
+    // if (snapshot != null) {
+    //   data = snapshot.docs.map((e) {
+    //     print(e.data());
+    //     return ProductModel.fromJson(e.data());
+    //   }).toList();
+    //   return data;
+    // }
+    //
+    // return data;
+  }
 }

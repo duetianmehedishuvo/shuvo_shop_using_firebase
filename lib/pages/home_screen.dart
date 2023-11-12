@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shuvo_shop_test/helpers/authentication_service.dart';
 import 'package:shuvo_shop_test/models/product_model.dart';
 import 'package:shuvo_shop_test/pages/product/create_product_screen.dart';
+import 'package:shuvo_shop_test/pages/student/add_student_screen.dart';
+import 'package:shuvo_shop_test/pages/student/student_home.dart';
 
 import '../widgets/import_all_files.dart';
 
@@ -21,6 +23,15 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>StudentHomeScreen()));
+                // AuthenticationService service = AuthenticationService();
+                // AuthenticationService.getAllSeries(1);
+                // AuthenticationService.getAllCategorySeries();
+              },
+              icon: Icon(Icons.info)),
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>AddStudentScreen()));
                 // AuthenticationService service = AuthenticationService();
                 // service.getAllProduct();
               },
